@@ -5,7 +5,9 @@ platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "win-64"]
 
 [tasks]
 sphinx = { cmd = "sphinx-build -M {{ builder }} source build", args = [{ arg = "builder", default = "help" }], description = "Run a Sphinx make-mode builder. Extra Sphinx options can be passed after --." }
+autobuild = { cmd = "sphinx-autobuild source build/html", description = "Build the docs and serve them with live-reload on change." }
 lint = { cmd = "sphinx-lint source", description = "Run sphinx-lint against the documentation sources." }
+doc8 = { cmd = "doc8 source/", description = "Run doc8 against the documentation sources." }
 lab = { cmd = "jupyter lab", cwd = "notebooks/iris-mesh-tutorial/notebooks", description = "Launch JupyterLab in the bundled mesh tutorial notebooks directory." }
 install-kernel = { cmd = '''python -m ipykernel install --user --name lfric-mesh --display-name "Python (lfric-mesh)"''', description = "Install the Pixi Python environment as a Jupyter kernel named lfric-mesh." }
 mesh-import-check = { cmd = '''python -c "import esmf_regrid, esmpy; print('mesh ok')"''', description = "Verify the mesh tutorial regridding imports are available." }
@@ -44,6 +46,8 @@ iris-esmf-regrid = "*"
 numpy = "<2"
 pre-commit = "*"
 esmpy = "*"
+doc8 = "*"
+sphinx-autobuild = "*"
 
 [pypi-dependencies]
 sphinxcontrib-quizdown = { git = "https://github.com/bonartm/sphinxcontrib-quizdown.git" }
