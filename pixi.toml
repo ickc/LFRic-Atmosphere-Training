@@ -10,6 +10,15 @@ lab = { cmd = "jupyter lab", cwd = "notebooks/iris-mesh-tutorial/notebooks", des
 install-kernel = { cmd = '''python -m ipykernel install --user --name lfric-mesh --display-name "Python (lfric-mesh)"''', description = "Install the Pixi Python environment as a Jupyter kernel named lfric-mesh." }
 mesh-import-check = { cmd = '''python -c "import esmf_regrid, esmpy; print('mesh ok')"''', description = "Verify the mesh tutorial regridding imports are available." }
 
+# Fork-maintenance helpers: this repo's "fork" branch carries commits/files
+# ahead of main. Feature branches are cut from "fork"; these tasks create and
+# keep in sync a "<branch>-on-main" counterpart suitable for PRs against main.
+# See scripts/fork-branch.sh for details.
+fork-pr-create = { cmd = "bash scripts/fork-branch.sh pr-create {{ branch }} {{ base }} {{ fork }}", args = [{ arg = "branch" }, { arg = "base", default = "main" }, { arg = "fork", default = "fork" }], description = "Create <branch>-on-main from <base>, containing <branch>'s commits ahead of <fork>. One-time; use fork-sync-up/down afterwards." }
+fork-sync-up = { cmd = "bash scripts/fork-branch.sh sync-up {{ branch }}", args = [{ arg = "branch" }], description = "Cherry-pick new commits from <branch> onto <branch>-on-main." }
+fork-sync-down = { cmd = "bash scripts/fork-branch.sh sync-down {{ branch }}", args = [{ arg = "branch" }], description = "Cherry-pick new commits from <branch>-on-main back onto <branch>." }
+fork-status = { cmd = "bash scripts/fork-branch.sh status {{ branch }}", args = [{ arg = "branch" }], description = "Show which commits differ (and are already applied vs new) between <branch> and <branch>-on-main." }
+
 [dependencies]
 python = ">=3.11,<3.13"
 sphinx = ">=7,<9"
