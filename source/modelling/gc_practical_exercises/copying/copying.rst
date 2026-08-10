@@ -6,31 +6,58 @@ workflow or create a new one. For this practical, a workflow has been provided
 for you to copy. For a regional workflow example please use ``u-by395``, for a
 global workflow example please use ``u-dz612``.
 
-You can copy or checkout an existing workflow using the rose command-line tool,
-replacing ``u-dz612`` with the actual suite ID. Remember that copying a
-workflow will create a new instance of the workflow in your ``~/roses``
-directory, while checking out will link to the original workflow allowing for
-trunk development. For this practical, we recommend copying the workflow.
+You can copy or check out an existing workflow using the ``rosie`` command-line
+tool, replacing ``u-dz612`` with the actual suite ID.
+
+.. _rosie-copy-vs-checkout:
+
+.. admonition:: What's the difference between copying and checking out?
+
+   **Copying a workflow**
+
+   - Creates an independent version in your ``~/roses`` directory
+   - Allows you to modify it freely without affecting the original
+   - Recommended for the practicals in this course
+
+   **Checking out a workflow**
+
+   - Links to the original (shared) workflow
+   - Typically used for collaborative or trunk development
+   - Changes may affect or depend on the main version
+
+   Both commands are described in the Rose command reference:
+   :external+rose:ref:`rosie copy <command-rosie-create>` and
+   :external+rose:ref:`rosie checkout <command-rosie-checkout>`.
+
+For this practical, we recommend copying the workflow.
 
 .. tab-set::
+   :sync-group: site
 
    .. tab-item:: Met Office
+      :sync: met-office
 
-      .. code-block:: console
+      .. code-block:: bash
 
-            $ mkdir ~/roses
-            $ cd ~/roses
-            $ rosie copy u-dz612
+         rosie copy u-dz612
 
    .. tab-item:: Monsoon
+      :sync: monsoon
 
       .. include:: /include/monsoon3-help.rst
 
-      .. code-block:: console
+      .. code-block:: bash
 
-            $ mkdir ~/roses
-            $ cd ~/roses
-            $ rosie copy u-dz612
+         rosie copy u-dz612
+
+   .. tab-item:: Other
+      :sync: other
+
+      .. include:: /include/other-platform-hpc.rst
+
+      .. code-block:: bash
+
+         rosie copy u-dz612
 
 After this, the following information will be displayed, this is the metadata
 associated with the workflow you have just copied. To edit this information,
@@ -38,72 +65,74 @@ press ``a`` on your keyboard. Once you have finished, press the ``Esc`` key
 followed by ``:wq`` to write and quit.
 
 .. tab-set::
+   :sync-group: site
 
    .. tab-item:: Met Office
+      :sync: met-office
 
-      .. code-block:: console
-
-            description=  < This is where you can write information about the workflow  e.g. Copy of u-ab122/trunk@123456 >
-            owner=  < Your username will appear here  >
-            project=  < The associated project title e.g. GC6-climate-amip >
-            title= < The title of the workflow should be put here e.g. Global AtmosOnly Climate Workflow >
-            # Make changes ABOVE these lines.
-            # The "owner", "project" and "title" fields are compulsory.
-            # Any KEY=VALUE pairs can be added. Known fields include:
-            # "access-list", "description" and "sub-project".
+      .. include:: /include/snippets/rosie-copy-metadata.rst
 
    .. tab-item:: Monsoon
+      :sync: monsoon
 
-      .. code-block:: console
+      .. include:: /include/snippets/rosie-copy-metadata.rst
 
-            description=  < This is where you can write information about the workflow  e.g. Copy of u-ab122/trunk@123456 >
-            owner=  < Your username will appear here  >
-            project=  < The associated project title e.g. GC6-climate-amip >
-            title= < The title of the workflow should be put here e.g. Global AtmosOnly Climate Workflow >
-            # Make changes ABOVE these lines.
-            # The "owner", "project" and "title" fields are compulsory.
-            # Any KEY=VALUE pairs can be added. Known fields include:
-            # "access-list", "description" and "sub-project".
+   .. tab-item:: Other
+      :sync: other
+
+      .. include:: /include/snippets/rosie-copy-metadata.rst
 
 You will then be asked in the terminal:
 
 .. tab-set::
+   :sync-group: site
 
    .. tab-item:: Met Office
+      :sync: met-office
 
       .. code-block:: console
 
-            $ rosie copy u-dz612
-            Copy "u-dz612/trunk@123456" to "u-?????"? [y or n (default)]
+         $ rosie copy u-dz612
+         Copy "u-dz612/trunk@123456" to "u-?????"? [y or n (default)]
 
    .. tab-item:: Monsoon
+      :sync: monsoon
 
       .. code-block:: console
 
-            $ rosie copy u-dz612
-            Copy "u-dz612/trunk@123456" to "u-?????"? [y or n (default)]
+         $ rosie copy u-dz612
+         Copy "u-dz612/trunk@123456" to "u-?????"? [y or n (default)]
+
+   .. tab-item:: Other
+      :sync: other
+
+      .. code-block:: console
+
+         $ rosie copy u-dz612
+         Copy "u-dz612/trunk@123456" to "u-?????"? [y or n (default)]
 
 Press ``y`` to confirm you want to copy the workflow. You will then see the
 following message confirming the workflow has been copied.
 
 .. tab-set::
+   :sync-group: site
 
    .. tab-item:: Met Office
+      :sync: met-office
 
-      .. code-block:: console
-
-            [INFO] u-?????: created at https://code.metoffice.gov.uk/svn/roses-u/?/?/?/?/?
-            [INFO] u-?????: copied items from u-dz612/trunk@123456
-            [INFO] u-?????: local copy created at ~/roses/u-?????
+      .. include:: /include/snippets/rosie-copy-confirm.rst
 
    .. tab-item:: Monsoon
+      :sync: monsoon
 
-      .. code-block:: console
+      .. include:: /include/snippets/rosie-copy-confirm.rst
 
-            [INFO] u-?????: created at https://code.metoffice.gov.uk/svn/roses-u/?/?/?/?/?
-            [INFO] u-?????: copied items from u-dz612/trunk@123456
-            [INFO] u-?????: local copy created at ~/roses/u-?????
+   .. tab-item:: Other
+      :sync: other
+
+      .. include:: /include/snippets/rosie-copy-confirm.rst
 
 Congratulations, you have successfully copied workflow ``u-dz612`` and made the
-new suite-id ``u-????``! You can now navigate to the workflow directory and
-start working on it.
+new suite ID ``u-?????``. Make a note of that new ID: the rest of this
+practical refers to it as ``<suite-id>``. You can now navigate to the workflow
+directory and start working on it.
