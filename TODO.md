@@ -42,7 +42,7 @@ Last updated: 2026-09-21
 
 | Item | Ball in court | Last activity | Next |
 | --- | --- | --- | --- |
-| [LFRic-AT#360](https://github.com/MetOffice/LFRic-Atmosphere-Training/pull/360) raster → vector images (PR by wxtim) | **ickc** (review requested, pinged) | 2026-09-21 | Review |
+| [LFRic-AT#360](https://github.com/MetOffice/LFRic-Atmosphere-Training/pull/360) raster → vector images (PR by wxtim) | others (wxtim) | 2026-09-21 | Approve once wxtim OKs fixes |
 | [LFRic-AT#358](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/358) quiz quality | **ickc** | 2026-09-17 | PR fixing clear errors |
 | [LFRic-AT#355](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/355) further-reading sections | **ickc** | 2026-09-17 | PR using `seealso` |
 | [LFRic-AT#354](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/354) explain figures | **ickc** (after #360) | 2026-09-17 | Rebase on #360 |
@@ -85,10 +85,18 @@ Last updated: 2026-09-21
     "other images"), rather than growing this PR.
 - Overlaps #354 (point 5, legibility/SVG; wxtim: "mesh3.png should _not_ be a
   picture").
-- **Next:** review the PR (`git fetch upstream pull/360/head:pr-360`,
-  check out, `pixi run autobuild`, and
-  compare pages), approve or push small fixes; list leftover rasters as a
-  follow-up.
+- 2026-09-21: ickc reviewed it (the docs build cleanly with `-n`, and each figure
+  was compared with the PNG it replaces). ickc pushed 4 fixes to wxtim's branch (783361e faces caption,
+  e284e71 stray backtick, ae6855b nodes vs points terminology, be62ab8
+  restored missing trialling-table column as a list-table) and
+  [commented](https://github.com/MetOffice/LFRic-Atmosphere-Training/pull/360#issuecomment-5765735293)
+  asking (a) whether the fixes are OK, (b) the third column's header name,
+  (c) whether dropping the ✓/✗ gates in `seamless_dev_cycle.svg` is accurate.
+- **Next:** when wxtim replies and CI is green, approve. Optional
+  non-blocking points (not raised yet): 1.7 MB `unstructured_tools.svg` with
+  embedded PNGs; `intro_components.html` has empty `id=""`, unescaped `&`,
+  no `aria-hidden` on arrow SVGs, overflows at phone width, and lost its
+  figure caption/number; trialling table has no label/intro sentence.
 
 ### LFRic-AT#358 — Quiz quality
 
