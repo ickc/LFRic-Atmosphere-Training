@@ -86,17 +86,20 @@ Last updated: 2026-09-21
 - Overlaps #354 (point 5, legibility/SVG; wxtim: "mesh3.png should _not_ be a
   picture").
 - 2026-09-21: ickc reviewed it (the docs build cleanly with `-n`, and each figure
-  was compared with the PNG it replaces). ickc pushed 4 fixes to wxtim's branch (783361e faces caption,
-  e284e71 stray backtick, ae6855b nodes vs points terminology, be62ab8
-  restored missing trialling-table column as a list-table) and
+  was compared with the PNG it replaces). ickc pushed 3 fixes to wxtim's branch (783361e faces caption,
+  e284e71 stray backtick, ae6855b nodes vs points terminology). A 4th
+  (be62ab8, trialling table as 4 lists) was reverted by force-push: ickc
+  judged wxtim's merge of the original 3rd column into the 2nd as a
+  deliberate editorial improvement. ickc then
   [commented](https://github.com/MetOffice/LFRic-Atmosphere-Training/pull/360#issuecomment-5765735293)
-  asking (a) whether the fixes are OK, (b) the third column's header name,
-  (c) whether dropping the ✓/✗ gates in `seamless_dev_cycle.svg` is accurate.
+  asking (a) whether the fixes are OK, (b) whether dropping the ✓/✗ gates in `seamless_dev_cycle.svg` is accurate.
 - **Next:** when wxtim replies and CI is green, approve. Optional
   non-blocking points (not raised yet): 1.7 MB `unstructured_tools.svg` with
   embedded PNGs; `intro_components.html` has empty `id=""`, unescaped `&`,
   no `aria-hidden` on arrow SVGs, overflows at phone width, and lost its
-  figure caption/number; trialling table has no label/intro sentence.
+  figure caption/number; trialling table has no label/intro sentence; "Long (100yr) coupled
+  climate runs" and "Seasonal hindcast" from the original 3rd column are
+  not in wxtim's table.
 
 ### LFRic-AT#358 — Quiz quality
 
