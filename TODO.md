@@ -4,7 +4,7 @@ Tracks what needs a reaction from @ickc across the upstream
 [MetOffice](https://github.com/MetOffice) org: issues opened by ickc, and open
 PRs that mention or involve ickc. This file lives only on the `fork` branch.
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 ## How to update this file (instructions for the next Claude session)
 
@@ -42,10 +42,10 @@ Last updated: 2026-09-21
 
 | Item | Ball in court | Last activity | Next |
 | --- | --- | --- | --- |
-| [LFRic-AT#360](https://github.com/MetOffice/LFRic-Atmosphere-Training/pull/360) raster → vector images (PR by wxtim) | others (wxtim) | 2026-09-21 | Approve once wxtim OKs fixes |
 | [LFRic-AT#358](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/358) quiz quality | **ickc** | 2026-09-17 | PR fixing clear errors |
 | [LFRic-AT#355](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/355) further-reading sections | **ickc** | 2026-09-17 | PR using `seealso` |
-| [LFRic-AT#354](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/354) explain figures | **ickc** (after #360) | 2026-09-17 | Rebase on #360 |
+| [LFRic-AT#354](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/354) explain figures | **ickc** (unblocked: #360 merged) | 2026-09-17 | PR on top of the new SVGs |
+| #360 follow-ups (no issue yet) | **ickc** | 2026-09-22 | Open follow-up issue/PR |
 | [LFRic-AT#357](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/357) structured vs unstructured | others (@jcmt) | 2026-09-17 | Wait; maybe propose phasing |
 | [LFRic-AT#233](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/233) formatter / style check in CI | **ickc** | 2026-06-08 | PR: doc8 on changed files |
 | [LFRic-AT#356](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/356) trim JULES / Ocean pages | others | 2026-09-17 | Wait for feedback |
@@ -57,49 +57,26 @@ Last updated: 2026-09-21
 
 ## Action needed (ickc)
 
-### LFRic-AT#360 — Replace raster with vector images (PR by wxtim)
+### #360 follow-ups (raster → vector, merged 2026-09-22)
 
-- Review requested from ickc and Momentum Partnership Team. wxtim
-  (2026-09-18): "there are other images which ought to be converted";
-  (2026-09-21): "Poking @ickc - I've done all I have the energy for on this
-  for this week." One inline note: `source/_static/1/intro_components.html`
-  replaces a picture with HTML for screen-reader accessibility.
-- State: not draft, CI green (pa11y, docs build, CLA), 1 commit,
-  maintainer can modify (so ickc can push fixes to wxtim's branch).
-- Removes `components.png`, `develop-regional-models.png`, `gc5_release.png`,
-  `mesh{1,2,3}.png`, `psykal.png`, `seamless_dev_cycle.png`,
-  `unstructured_tools.png`, `1/intro_components.png`; none are still
-  referenced on the PR head.
-- Review observations (from a quick look on 2026-09-21):
-  - `unstructured_tools.svg` is 1.7 MB / 22k lines and embeds base64 PNG and
-    SVG logos; `components.svg` embeds 5 base64 PNGs. So these are not fully
-    vector and are not easily diffable — arguably worse than the PNG for
-    version control. Suggest linking (`<image href="logos/...">`) or
-    inlining the vector logos, and running an optimiser (e.g. `svgo`/`scour`).
-  - New `source/_static/logos/` (PNG, SVG, `.ico`, `.provenance` files) are
-    not referenced from any `.rst`; check they're intended as editable
-    sources, and that the provenance/licensing of third-party logos is fine.
-  - `seamless_dev_cycle.dia` added as the editable source: good pattern;
-    ask for the same for other diagrams.
-  - Remaining rasters to convert could be a follow-up checklist (wxtim's
-    "other images"), rather than growing this PR.
-- Overlaps #354 (point 5, legibility/SVG; wxtim: "mesh3.png should _not_ be a
-  picture").
-- 2026-09-21: ickc reviewed it (the docs build cleanly with `-n`, and each figure
-  was compared with the PNG it replaces). ickc pushed 3 fixes to wxtim's branch (783361e faces caption,
-  e284e71 stray backtick, ae6855b nodes vs points terminology). A 4th
-  (be62ab8, trialling table as 4 lists) was reverted by force-push: ickc
-  judged wxtim's merge of the original 3rd column into the 2nd as a
-  deliberate editorial improvement. ickc then
-  [commented](https://github.com/MetOffice/LFRic-Atmosphere-Training/pull/360#issuecomment-5765735293)
-  asking (a) whether the fixes are OK, (b) whether dropping the ✓/✗ gates in `seamless_dev_cycle.svg` is accurate.
-- **Next:** when wxtim replies and CI is green, approve. Optional
-  non-blocking points (not raised yet): 1.7 MB `unstructured_tools.svg` with
-  embedded PNGs; `intro_components.html` has empty `id=""`, unescaped `&`,
-  no `aria-hidden` on arrow SVGs, overflows at phone width, and lost its
-  figure caption/number; trialling table has no label/intro sentence; "Long (100yr) coupled
-  climate runs" and "Seasonal hindcast" from the original 3rd column are
-  not in wxtim's table.
+- wxtim merged #360 without answering ickc's question on whether
+  `seamless_dev_cycle.svg` dropping the ✓/✗ gates (and making all Evaluation
+  arrows two-way) is still accurate. wxtim also said "there are other images
+  which ought to be converted".
+- Non-blocking points from ickc's review, never raised on the PR:
+  - `unstructured_tools.svg` is 1.7 MB / 22k lines with embedded base64
+    PNG/SVG logos; `components.svg` embeds 5 base64 PNGs. Not really vector
+    or diffable. Link or inline the vector logos, then run `svgo`/`scour`.
+  - `source/_static/logos/` (PNG, SVG, `.ico`, `.provenance`) isn't
+    referenced from any `.rst`; check intent and third-party logo licensing.
+  - `intro_components.html`: empty `id=""`, unescaped `&`, no `aria-hidden`
+    on arrow SVGs, overflows at phone width, lost its figure caption/number.
+  - Trialling table has no label/intro sentence; "Long (100yr) coupled
+    climate runs" and "Seasonal hindcast" from the original 3rd column are
+    missing.
+- **Next:** open one issue listing these (plus a checklist of remaining
+  rasters to convert), and re-ask the ✓/✗ gates question there. Then send
+  small PRs (SVG size first, then `intro_components.html` accessibility).
 
 ### LFRic-AT#358 — Quiz quality
 
@@ -121,9 +98,10 @@ Last updated: 2026-09-21
 ### LFRic-AT#354 — Introduce and explain figures
 
 - wxtim (2026-09-17): "mesh3.png should _not_ be a picture IMO!" — #360
-  removes it.
-- **Next:** after #360 merges, rework figure intros/captions/alt text on top
-  of the new SVGs (use `:numref:`).
+  (merged 2026-09-22) replaced it with a table.
+- **Next:** unblocked. Rework figure intros/captions/alt text on top of the
+  new SVGs (use `:numref:`); can fold in the lost `intro_components`
+  caption from the #360 follow-ups.
 
 ### LFRic-AT#233 — Formatter / style check in CI
 
@@ -150,6 +128,12 @@ Last updated: 2026-09-21
 - **shumlib#38** — version not bumped for 2026.07.2; no response yet.
 
 ## Done
+
+- LFRic-AT#365 — higher-resolution Momentum logo, PR by ickc (merged by
+  wxtim 2026-09-23; no SVG available per wxtim). Local branch
+  `better-image-on-main` can be deleted.
+- LFRic-AT#360 — raster → vector images, PR by wxtim (ickc approved
+  2026-09-21 after pushing 3 fixes; merged 2026-09-22). Follow-ups above.
 
 - LFRic-AT#232 — line-length safeguard (closed).
 - LFRic-AT#163 — sphinxcontrib-quizdown dependency risk (closed).
