@@ -42,8 +42,8 @@ Last updated: 2026-09-23
 
 | Item | Ball in court | Last activity | Next |
 | --- | --- | --- | --- |
-| [LFRic-AT#358](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/358) quiz quality | **ickc** | 2026-09-17 | PR fixing clear errors |
-| [LFRic-AT#355](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/355) further-reading sections | **ickc** | 2026-09-17 | PR using `seealso` |
+| [LFRic-AT#358](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/358) quiz quality | **ickc** | 2026-09-23 | Mark [#366](https://github.com/MetOffice/LFRic-Atmosphere-Training/pull/366) ready; then pilot a redesign |
+| [LFRic-AT#355](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/355) further-reading sections | **ickc** | 2026-09-23 | Mark [#367](https://github.com/MetOffice/LFRic-Atmosphere-Training/pull/367) ready; then content pages |
 | [LFRic-AT#354](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/354) explain figures | **ickc** (unblocked: #360 merged) | 2026-09-17 | PR on top of the new SVGs |
 | #360 follow-ups (no issue yet) | **ickc** | 2026-09-22 | Open follow-up issue/PR |
 | [LFRic-AT#357](https://github.com/MetOffice/LFRic-Atmosphere-Training/issues/357) structured vs unstructured | others (@jcmt) | 2026-09-17 | Wait; maybe propose phasing |
@@ -85,15 +85,26 @@ Last updated: 2026-09-23
   questions with explanatory feedback; fixing clear errors (placeholder
   question, contradictory feedback, unrecognised settings) separately is
   "probably worth doing" and uncontroversial. Suggests testing on new users.
-- **Next:** open a small PR fixing the clear errors first; then propose a
-  redesign for one quiz as a pilot.
+- 2026-09-23: draft [#366](https://github.com/MetOffice/LFRic-Atmosphere-Training/pull/366)
+  (branch `quiz-clear-errors`, `-on-main`) removes the placeholder question,
+  fixes the rows feedback, and replaces unrecognised options with
+  `shuffle_questions`/`shuffle_answers` (questions now shuffle). It also fixes typos. It flags
+  but doesn't fix the "Panama canal" hint (≈10 yr vs 2 yr answer).
+- **Next:** review and mark #366 ready; then propose a redesign for one quiz
+  as a pilot.
 
 ### LFRic-AT#355 — Further-reading sections on landing pages
 
 - wxtim (2026-09-17): agrees about digressions; likes the proposed rewording
   of the prior-knowledge note; no comms reason to keep links at top;
   suggests Sphinx `.. seealso::` at the end of the *section* rather than page.
-- **Next:** PR implementing the rewording + `seealso` boxes.
+- 2026-09-23: draft [#367](https://github.com/MetOffice/LFRic-Atmosphere-Training/pull/367)
+  (branch `further-reading`, `-on-main`) covers the home page and Module 1 landing page
+  only, which are the only landing pages with external links. It uses `seealso` at the end of a section
+  and leaves the Discussions box (#350) at the top.
+- **Next:** review and mark #367 ready; follow-up PR for content pages
+  (unstructured intro tool list; unify "Further resources"/"See also"/
+  "Further reading" on JULES, Ocean, PSyKAl).
 
 ### LFRic-AT#354 — Introduce and explain figures
 
