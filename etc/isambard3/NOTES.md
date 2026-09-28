@@ -82,3 +82,21 @@ Test area used while verifying: `$SCRATCHDIR/lfric-training`.
    host. Isambard 3 login nodes reject SSH, even to themselves ("Too many
    authentication failures"). **Needs rose-stem to use a local path when the
    source is on a shared filesystem**, or host-based SSH between nodes.
+
+## Tracked in lfric-env-isambard
+
+| Issue | Topic |
+|-------|-------|
+| [#18](https://github.com/ickc/lfric-env-isambard/issues/18) | cylc-flow >= 8.6 for lfric_apps rose-stem |
+| [#19](https://github.com/ickc/lfric-env-isambard/issues/19) | Isambard 3 rose-stem site |
+| [#20](https://github.com/ickc/lfric-env-isambard/issues/20) | rose-stem `scp` to `ROSE_ORIG_HOST` |
+| [#21](https://github.com/ickc/lfric-env-isambard/issues/21) | rosie `[rosie-id]` site config in the module |
+| [#22](https://github.com/ickc/lfric-env-isambard/issues/22) | MOSRS password-caching recipe |
+| [#23](https://github.com/ickc/lfric-env-isambard/issues/23) | cylc-uiserver for `cylc gui` (optional) |
+| [#24](https://github.com/ickc/lfric-env-isambard/issues/24) | u-dz612, global practicals |
+| [#25](https://github.com/ickc/lfric-env-isambard/issues/25) | u-by395, regional practicals |
+| [#26](https://github.com/ickc/lfric-env-isambard/issues/26) | u-dz791, idealised practicals |
+| [#27](https://github.com/ickc/lfric-env-isambard/issues/27) | Standard suite for Practical 2 |
+
+When a suite is supported there, copy its instructions into the Isambard 3
+tabs of the corresponding training pages.
