@@ -41,3 +41,44 @@ Test area used while verifying: `$SCRATCHDIR/lfric-training`.
   from another host on the HSN.
 - Compute nodes reach GitHub over HTTPS. SSH to GitHub does not work in jobs:
   the key lives in the login-node ssh-agent.
+
+## Status by page
+
+| Page | Status on Isambard 3 |
+|------|----------------------|
+| Mesh tutorial (`mesh_overview/exercises/practical_exercises`) | Verified: all 11 notebooks run in the Python env; JupyterLab via SSH tunnel |
+| LFRic infrastructure setup (`lfric_infrastructure/practical_exercises`) | Written |
+| Practical 1, command line | Verified end to end (clone, compile, run, `ncdump`, `iodef.xml` changes, recompiled log message) |
+| Practical 2, standard suite | **Blocked**: `MetOffice/momentum_user_training.example_lfric_workflow` is private (404 for our GitHub account) |
+| Practical 3, rose stem | **Blocked**, see below; the page says so |
+
+### Practical 1 details
+
+- Upstream `lfric_apps` (tested at `aef51e27`) compiles **unpatched** with the
+  module; none of lfric-env-isambard's `patches/` were needed.
+- `local_build.py` clones lfric_core and the physics repositories from
+  `git@github.com:` URLs. In a Slurm job there is no ssh-agent, so the docs
+  set `GIT_CONFIG_COUNT/KEY_0/VALUE_0` to rewrite them to HTTPS (all are
+  public). This avoids changing the learner's global git config.
+- Compile: `srun --partition=grace --ntasks=1 --cpus-per-task=24
+  --mem-per-cpu=1600M ... -j 24`, about 4 minutes.
+- Run: about 26 s via `srun --ntasks=1 --cpus-per-task=4`. On a login node it
+  was still at timestep 35 of 72 after 5 minutes (OpenMP threads competing
+  with other users), so the docs run it through `srun`.
+
+### Practical 3 (rose stem) blockers
+
+1. `rose-stem/flow.cylc` uses `CYLC_WORKFLOW_SRC_DIR`, which cylc-flow only
+   provides from **8.6.0**. lfric-env v2026.08.18 has cylc-flow 8.4.2 (and
+   cylc-rose 1.5.1), so `cylc vip ... ./rose-stem` fails validation with
+   `'CYLC_WORKFLOW_SRC_DIR' is undefined`. **Needs cylc-flow >= 8.6 in
+   lfric-env-isambard.**
+2. No rose-stem site for Isambard 3: `site/uoe` covers only the `epic` and
+   `dial3` platforms. **Needs a `site/isambard3` (or an Isambard platform in
+   `site/uoe`) upstream in lfric_apps**, plus `SITE` from
+   `rose config rose-stem automatic-options` (site `rose.conf`).
+3. `SOURCE_DIRECTORY` is always `ROSE_ORIG_HOST:path`, and
+   `lib/python/read_sources.py` fetches `dependencies.yaml` with `scp` to that
+   host. Isambard 3 login nodes reject SSH, even to themselves ("Too many
+   authentication failures"). **Needs rose-stem to use a local path when the
+   source is on a shared filesystem**, or host-based SSH between nodes.
