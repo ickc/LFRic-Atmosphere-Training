@@ -38,6 +38,14 @@ lfric-env v2026.09.28; see the issue table below.
   (`$(hostname -s).hsn.cm.i3.isambard.ac.uk`) and the tunnel is
   `ssh -T -L localhost:PORT:HOST:PORT <PROJECT>.3.isambard`. Verified reachable
   from another host on the HSN.
+- Cylc across login nodes (tested 2026-09-30, using a compute node as the
+  "other host"): `cylc ping/scan/dump/pause/play (resume)/cat-log/stop`
+  all work over TCP. Restarting a scheduler that died uncleanly fails from
+  any other host: `cylc play` runs `ssh <origin> cylc psutil` and stops with
+  "Cannot tell if the workflow is running". Removing
+  `runN/.service/contact` first lets it start. Documented in the appendix.
+- `ssh localhost` is refused too, so setting the host to `localhost` does not
+  avoid SSH. The rose-stem patch's plain-path fallback is what works.
 - Compute nodes reach GitHub over HTTPS. SSH to GitHub does not work in jobs:
   the key lives in the login-node ssh-agent.
 
