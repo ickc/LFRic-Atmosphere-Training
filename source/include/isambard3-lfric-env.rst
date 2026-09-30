@@ -6,4 +6,4 @@
 .. code-block:: bash
 
    module use /projects/u35v/khcheung.u35v/opt/Linux-aarch64/modulefiles
-   module load lfric-env/v2026.08.18/cray
+   module load lfric-env/v2026.09.28/cray
