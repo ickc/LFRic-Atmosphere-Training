@@ -133,8 +133,10 @@ Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
   It targets lfric_apps `main`; validated there at `801edbfa`, and it still
   applied at `2a3e9b1d`. It will need refreshing as `main` moves.
 - The patch now sets `USE_TOKENS` itself (#40), so dependencies are cloned
-  over HTTPS without a GitHub key. Re-verified 2026-09-30 with an empty
-  `CYLC_CONF_PATH`: the module supplies the `isambard3` platform (#31).
+  over HTTPS without a GitHub key. Re-verified 2026-09-30 with a throwaway
+  `HOME` on scratch (no `~/.cylc`): the module supplies the `isambard3`
+  platform (#31). An earlier check set an empty `CYLC_CONF_PATH`, which also
+  hides the module's site config, so it did not test #31.
 - `scripts` group: 12 of 12 tasks succeed. A trailing space fails
   `style_checker` ("Found trailing white space") and `fortitude_linter`.
 - The Practical 1 hint code used `.lt.`, which `fortitude_linter` rejects
