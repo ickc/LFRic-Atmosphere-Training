@@ -61,7 +61,7 @@ Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
 | Practical 3, rose stem | Verified for the `scripts` group, with the lfric-env-isambard site patch (see below) |
 | Global practicals (u-dz612) | **Cannot run**: coupled GC6 (UM, NEMO, SI3) and Met Office data. Tabs say so. #24 |
 | Regional practicals (u-by395) | **Cannot run**: UM-driven nesting suite needing operational analyses. Tabs say so. #25 |
-| Idealised practicals (u-dz791) | **Pending** the port in lfric-env-isambard, #26. No Isambard 3 tabs yet |
+| Idealised practicals (u-dz791) | Verified with lfric-env-isambard's `run-suite.sh u-dz791` (see below) |
 
 ### Practical 1 details
 
@@ -99,6 +99,33 @@ Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
 - The pinned revision (361458) must track lfric-env-isambard's stager
   (`patches/suites/42-roses-u-u-dn704-patch.sh`), which refuses any other.
 
+### Idealised practicals (u-dz791)
+
+- Tested as a trainee on 2026-09-30: throwaway `HOME` on scratch with no
+  `~/.cylc`, a pristine `svn checkout -r 368986` of u-dz791 (via
+  `LFRIC_SUITE_DIR`), and a plain clone of lfric-env-isambard.
+- The stager needs LFRic rose metadata for `rose app-upgrade`, so the clone
+  needs `git submodule update --init vendor/lfric_apps vendor/lfric_core
+  vendor/physics/jules` (about 12 s). Without it: `no jules-lfric rose-meta on
+  ROSE_META_PATH`.
+- Trainees **check out** rather than `rosie copy`: upstream u-dz791 builds
+  2026.03.1 from a private Met Office path, and the stager is pinned to the
+  upstream revision.
+- Run 1 (control): extract, builds, mesh, and both 30-minute cycles
+  succeeded. Output: `work/<cycle>/lfric_atm/lfric_crm_diag_*.nc`, one
+  time per 10-minute file.
+- Re-running after an edit (run 2, `rotating=.true.`, both cycles succeeded):
+  `run-suite.sh u-dz791` again recognises the
+  staged checkout, keeps the edit and starts a new run.
+- Every key the experiments edit (`rotating`, `cp`, `rd`, `perturb_*`, the
+  `initial_vapour` opt block, `LFRIC_LEVS=uniform_l100_75km`) exists after
+  the vn3.2 upgrade.
+- Plotting page (05) in the Python env: loading, the derived-diagnostic
+  functions and the reshape to x/y work. The page's code does not run end to
+  end on any platform: it indexes `time_step = 30` in a file with one time,
+  and its slice and profile blocks index the unstructured cubes rather than
+  the reshaped one.
+
 ### Practical 3 details
 
 - Needs `patches/rose-stem/lfric_apps-isambard3-site.patch` from
@@ -132,6 +159,5 @@ Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
 | [#27](https://github.com/ickc/lfric-env-isambard/issues/27) | Standard suite for Practical 2 |
 | [#40](https://github.com/ickc/lfric-env-isambard/issues/40) | rose-stem site should set `USE_TOKENS` |
 
-#18 to #23 and #27 are closed. #24 and #25 are open and blocked on Met Office
-data. #26 and #40 are open. When u-dz791 is supported there, add Isambard 3
-tabs to the idealised practical pages.
+#18 to #23, #26, #27, #31 and #40 are closed. #24 and #25 are blocked on Met
+Office data (training issues #371, #372).
