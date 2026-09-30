@@ -120,11 +120,15 @@ Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
 - Every key the experiments edit (`rotating`, `cp`, `rd`, `perturb_*`, the
   `initial_vapour` opt block, `LFRIC_LEVS=uniform_l100_75km`) exists after
   the vn3.2 upgrade.
-- Plotting page (05) in the Python env: loading, the derived-diagnostic
-  functions and the reshape to x/y work. The page's code does not run end to
-  end on any platform: it indexes `time_step = 30` in a file with one time,
-  and its slice and profile blocks index the unstructured cubes rather than
-  the reshaped one.
+- Plotting page (05): its code used to fail on this output on any platform
+  (a single-file load then `time_step = 30`, and slice/profile blocks indexing
+  unstructured cubes). Fixed on this branch: it loads every
+  `lfric_crm_diag_*.nc`, promotes the auxiliary `time` coordinate and
+  equalises attributes before `concatenate()` (times are 600 to 3600 s), and
+  reshapes the whole CubeList to x/y. All 11 blocks, including the
+  animation, run on run 1 in the Python env.
+- Experiment 3 (09) named `perturb_init` (a logical) as the value to change;
+  fixed to `perturb_magnitude` (1 in the workflow). Not run on Isambard 3.
 
 ### Practical 3 details
 
