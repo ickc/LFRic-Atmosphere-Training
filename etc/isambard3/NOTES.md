@@ -105,9 +105,9 @@ Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
   lfric-env-isambard applied to the learner's `lfric_apps` clone (#19, #20).
   It targets lfric_apps `main`; validated there at `801edbfa`, and it still
   applied at `2a3e9b1d`. It will need refreshing as `main` moves.
-- The patch's site does not set `USE_TOKENS`, so `export-source` clones over
-  SSH and fails without a GitHub key (#40). The docs append the one line that
-  fixes it; drop that step once the patch carries it.
+- The patch now sets `USE_TOKENS` itself (#40), so dependencies are cloned
+  over HTTPS without a GitHub key. Re-verified 2026-09-30 with an empty
+  `CYLC_CONF_PATH`: the module supplies the `isambard3` platform (#31).
 - `scripts` group: 12 of 12 tasks succeed. A trailing space fails
   `style_checker` ("Found trailing white space") and `fortitude_linter`.
 - The Practical 1 hint code used `.lt.`, which `fortitude_linter` rejects
