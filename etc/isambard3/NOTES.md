@@ -85,8 +85,9 @@ Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
   `cylc trigger u-dn704//1/lfric_atm` reran only the model and stopped at
   step 72. The work directory is reused, so old `*.nc` must be removed first
   for the file count to mean anything.
-- **Not verified here:** `mosrs-cache-password` with a real password and the
-  `rosie checkout` itself (an existing checkout at r361458 was used).
+- MOSRS verified on 2026-09-30 after `mosrs-cache-password`: `rosie checkout
+  u-dn704` and `svn update -r 361458` run without prompting. `rosie lookup`
+  (the web service) still asks for a username; the practicals do not use it.
 - The pinned revision (361458) must track lfric-env-isambard's stager
   (`patches/suites/42-roses-u-u-dn704-patch.sh`), which refuses any other.
 
