@@ -16,6 +16,12 @@ blockers.
 The versions are pinned in `source/include/isambard3-lfric-env.rst` and
 `source/include/isambard3-python-env.rst` only.
 
+Both live under a personal prefix that only members of the course's Isambard 3 project can
+read, so learners must be added to that project (the access note in the
+appendix says to ask the University of Exeter). Moving to a shared prefix is
+lfric-env-isambard #46; when it happens, update both include files and rebuild
+the Python env there with `LFRIC_PREFIX=<new prefix>`.
+
 Test area used while verifying: `$SCRATCHDIR/lfric-training`.
 
 ## Needed beyond lfric-env-isambard
@@ -164,6 +170,7 @@ Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
 | [#26](https://github.com/ickc/lfric-env-isambard/issues/26) | u-dz791, idealised practicals |
 | [#27](https://github.com/ickc/lfric-env-isambard/issues/27) | Standard suite for Practical 2 |
 | [#40](https://github.com/ickc/lfric-env-isambard/issues/40) | rose-stem site should set `USE_TOKENS` |
+| [#46](https://github.com/ickc/lfric-env-isambard/issues/46) | Shared, non-personal release prefix |
 
 #18 to #23, #26, #27, #31 and #40 are closed. #24 and #25 are blocked on Met
 Office data (training issues #371, #372).
