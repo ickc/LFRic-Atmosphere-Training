@@ -9,7 +9,7 @@ blockers.
 
 | What | Where | Provided by |
 |------|-------|-------------|
-| LFRic build + workflow tools | `module use "$LFRIC_TRAINING_PREFIX/modulefiles"; module load lfric-env/v2026.08.18/cray` | lfric-env-isambard |
+| LFRic build + workflow tools | `module use "$LFRIC_TRAINING_PREFIX/modulefiles"; module load lfric-env/v2026.09.28/cray` | lfric-env-isambard |
 | Python analysis env | `$LFRIC_TRAINING_PREFIX/conda/envs/lfric-training-v2026.09.28` | `etc/isambard3/build-python-env.sh` (this repo) |
 | micromamba (for activation) | `$LFRIC_TRAINING_PREFIX/conda/bin/micromamba` | same script |
 
@@ -22,15 +22,14 @@ Test area used while verifying: `$SCRATCHDIR/lfric-training`.
 
 - **Python analysis stack** (Iris, GeoVista, esmpy, JupyterLab, ...): provided
   by the separate micromamba env above rather than Spack.
-- **Rosie site config**: the module ships `rosie` but no `[rosie-id]` prefix
-  map, so `rosie checkout u-...` fails with `u: cannot determine prefix
-  location`. lfric-env-isambard keeps one in
-  `examples/science-suites/site/rose.conf`; the module should set
-  `ROSE_SITE_CONF_PATH` to a shipped copy. Until then learners add it to
-  `~/.metomi/rose.conf`.
-- **`cylc gui`** (cylc-uiserver) is not installed; the docs use `cylc tui`.
-- **`rose edit`** does not exist in Rose 2; the docs point to a text editor.
-- **`fcm`** is not in the module (not needed by the practicals so far).
+- **`rose edit`** is an optional extra of Rose 2.7 (GTK) and is not installed;
+  the docs point to a text editor.
+- **`fcm`** is not in the module. The global and regional training suites
+  would need it (see #24, #25).
+
+Everything else first found missing (cylc 8.6, the rosie site config,
+`mosrs-cache-password`, `cylc gui`, a rose-stem site) arrived in
+lfric-env v2026.09.28; see the issue table below.
 
 ## Isambard 3 facts the docs rely on
 
@@ -44,13 +43,17 @@ Test area used while verifying: `$SCRATCHDIR/lfric-training`.
 
 ## Status by page
 
+Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
+
 | Page | Status on Isambard 3 |
 |------|----------------------|
-| Mesh tutorial (`mesh_overview/exercises/practical_exercises`) | Verified: all 11 notebooks run in the Python env; JupyterLab via SSH tunnel |
-| LFRic infrastructure setup (`lfric_infrastructure/practical_exercises`) | Written |
-| Practical 1, command line | Verified end to end (clone, compile, run, `ncdump`, `iodef.xml` changes, recompiled log message) |
-| Practical 2, standard suite | **Blocked**: `MetOffice/momentum_user_training.example_lfric_workflow` is private (404 for our GitHub account) |
-| Practical 3, rose stem | **Blocked**, see below; the page says so |
+| Mesh tutorial | Verified: all 11 notebooks run in the Python env; JupyterLab via SSH tunnel |
+| Practical 1, command line | Verified end to end with lfric_apps `main` @ `2a3e9b1d` |
+| Practical 2, standard suite | Verified with **u-dn704** in place of the private example repository (see below) |
+| Practical 3, rose stem | Verified for the `scripts` group, with the lfric-env-isambard site patch (see below) |
+| Global practicals (u-dz612) | **Cannot run**: coupled GC6 (UM, NEMO, SI3) and Met Office data. Tabs say so. #24 |
+| Regional practicals (u-by395) | **Cannot run**: UM-driven nesting suite needing operational analyses. Tabs say so. #25 |
+| Idealised practicals (u-dz791) | **Pending** the port in lfric-env-isambard, #26. No Isambard 3 tabs yet |
 
 ### Practical 1 details
 
@@ -66,22 +69,43 @@ Test area used while verifying: `$SCRATCHDIR/lfric-training`.
   was still at timestep 35 of 72 after 5 minutes (OpenMP threads competing
   with other users), so the docs run it through `srun`.
 
-### Practical 3 (rose stem) blockers
+### Practical 2 details
 
-1. `rose-stem/flow.cylc` uses `CYLC_WORKFLOW_SRC_DIR`, which cylc-flow only
-   provides from **8.6.0**. lfric-env v2026.08.18 has cylc-flow 8.4.2 (and
-   cylc-rose 1.5.1), so `cylc vip ... ./rose-stem` fails validation with
-   `'CYLC_WORKFLOW_SRC_DIR' is undefined`. **Needs cylc-flow >= 8.6 in
-   lfric-env-isambard.**
-2. No rose-stem site for Isambard 3: `site/uoe` covers only the `epic` and
-   `dial3` platforms. **Needs a `site/isambard3` (or an Isambard platform in
-   `site/uoe`) upstream in lfric_apps**, plus `SITE` from
-   `rose config rose-stem automatic-options` (site `rose.conf`).
-3. `SOURCE_DIRECTORY` is always `ROSE_ORIG_HOST:path`, and
-   `lib/python/read_sources.py` fetches `dependencies.yaml` with `scp` to that
-   host. Isambard 3 login nodes reject SSH, even to themselves ("Too many
-   authentication failures"). **Needs rose-stem to use a local path when the
-   source is on a shared filesystem**, or host-based SSH between nodes.
+- `MetOffice/momentum_user_training.example_lfric_workflow` is private (404
+  for us). Training PR #183 introduced it as a "temporary fix" replacing
+  `rosie co u-dn674`. The Isambard 3 tab uses u-dn704 (GAL9 at C12, same task
+  graph), checked out at r361458 and launched with lfric-env-isambard's
+  `examples/science-suites/run-suite.sh`, from a plain clone (no submodules).
+- Run `u-dn704/run7`: extract, build_mesh, build_lfric_atm (9 min),
+  generate_mesh, lfric_atm (43 s on 2 nodes) all succeeded; 144 timesteps,
+  29 NetCDF files in `work/1/lfric_atm`.
+- The timestep count is in `work/1/lfric_atm/PET00.lfric_atm.Log`, not
+  `job.out`.
+- Exercise: `timestep_end=72`, then `cylc vr u-dn704` and
+  `cylc trigger u-dn704//1/lfric_atm` reran only the model and stopped at
+  step 72. The work directory is reused, so old `*.nc` must be removed first
+  for the file count to mean anything.
+- **Not verified here:** `mosrs-cache-password` with a real password and the
+  `rosie checkout` itself (an existing checkout at r361458 was used).
+- The pinned revision (361458) must track lfric-env-isambard's stager
+  (`patches/suites/42-roses-u-u-dn704-patch.sh`), which refuses any other.
+
+### Practical 3 details
+
+- Needs `patches/rose-stem/lfric_apps-isambard3-site.patch` from
+  lfric-env-isambard applied to the learner's `lfric_apps` clone (#19, #20).
+  It targets lfric_apps `main`; validated there at `801edbfa`, and it still
+  applied at `2a3e9b1d`. It will need refreshing as `main` moves.
+- The patch's site does not set `USE_TOKENS`, so `export-source` clones over
+  SSH and fails without a GitHub key (#40). The docs append the one line that
+  fixes it; drop that step once the patch carries it.
+- `scripts` group: 12 of 12 tasks succeed. A trailing space fails
+  `style_checker` ("Found trailing white space") and `fortitude_linter`.
+- The Practical 1 hint code used `.lt.`, which `fortitude_linter` rejects
+  (MOD021). Fixed in the training page to use `<`.
+- The page mentions a `trac.log` summary; none was written in the run
+  directory here.
+- The `developer` group is not defined for the Isambard 3 site.
 
 ## Tracked in lfric-env-isambard
 
@@ -97,6 +121,8 @@ Test area used while verifying: `$SCRATCHDIR/lfric-training`.
 | [#25](https://github.com/ickc/lfric-env-isambard/issues/25) | u-by395, regional practicals |
 | [#26](https://github.com/ickc/lfric-env-isambard/issues/26) | u-dz791, idealised practicals |
 | [#27](https://github.com/ickc/lfric-env-isambard/issues/27) | Standard suite for Practical 2 |
+| [#40](https://github.com/ickc/lfric-env-isambard/issues/40) | rose-stem site should set `USE_TOKENS` |
 
-When a suite is supported there, copy its instructions into the Isambard 3
-tabs of the corresponding training pages.
+#18 to #23 and #27 are closed. #24 and #25 are open and blocked on Met Office
+data. #26 and #40 are open. When u-dz791 is supported there, add Isambard 3
+tabs to the idealised practical pages.
