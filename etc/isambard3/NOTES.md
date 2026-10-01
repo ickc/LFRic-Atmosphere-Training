@@ -57,12 +57,18 @@ lfric-env v2026.09.28; see the issue table below.
 
 ## Status by page
 
-Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
+Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30. Practicals 1 and 2
+and u-dz791 were re-verified on 2026-10-01 after the in-place XIOS rebuild
+(#38) and the rose-meta addition (#51), as a trainee with a fresh `HOME`.
+Runs started while the module was being regenerated (about 20:40-21:00 UTC
+on 2026-09-30) failed (missing `xios.mod`, `cylc` and `jinja2` in jobs); they
+are not environment bugs, but in-place updates during a course would break
+learners' running builds.
 
 | Page | Status on Isambard 3 |
 |------|----------------------|
 | Mesh tutorial | Verified: all 11 notebooks run in the Python env; JupyterLab via SSH tunnel |
-| Practical 1, command line | Verified end to end with lfric_apps `main` @ `2a3e9b1d` |
+| Practical 1, command line | Verified end to end with lfric_apps `main` @ `d2b54a76` (2026-10-01) |
 | Practical 2, standard suite | Verified with **u-dn704** in place of the private example repository (see below) |
 | Practical 3, rose stem | Verified for the `scripts` group, with the lfric-env-isambard site patch (see below) |
 | Global practicals (u-dz612) | **Cannot run**: coupled GC6 (UM, NEMO, SI3) and Met Office data. Tabs say so. #24 |
@@ -92,7 +98,8 @@ Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
   `examples/science-suites/run-suite.sh`, from a plain clone (no submodules).
 - Run `u-dn704/run7`: extract, build_mesh, build_lfric_atm (9 min),
   generate_mesh, lfric_atm (43 s on 2 nodes) all succeeded; 144 timesteps,
-  29 NetCDF files in `work/1/lfric_atm`.
+  29 NetCDF files in `work/1/lfric_atm`. Re-verified 2026-10-01 after the
+  XIOS rebuild (trainee `run1`): same result.
 - The timestep count is in `work/1/lfric_atm/PET00.lfric_atm.Log`, not
   `job.out`.
 - Exercise: `timestep_end=72`, then `cylc vr u-dn704` and
@@ -110,16 +117,20 @@ Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30.
 - Tested as a trainee on 2026-09-30: throwaway `HOME` on scratch with no
   `~/.cylc`, a pristine `svn checkout -r 368986` of u-dz791 (via
   `LFRIC_SUITE_DIR`), and a plain clone of lfric-env-isambard.
-- The stager needs LFRic rose metadata for `rose app-upgrade`, so the clone
-  needs `git submodule update --init vendor/lfric_apps vendor/lfric_core
-  vendor/physics/jules` (about 12 s). Without it: `no jules-lfric rose-meta on
-  ROSE_META_PATH`.
+- The stager needs LFRic rose metadata for `rose app-upgrade`. Since #51 the
+  module exports it as `LFRIC_ROSE_META_PATH`, so a plain clone is enough
+  (verified 2026-10-01; the launcher prints `rose-meta: the environment's`).
+  Before that the clone needed `git submodule update --init` for three
+  vendored trees.
 - Trainees **check out** rather than `rosie copy`: upstream u-dz791 builds
   2026.03.1 from a private Met Office path, and the stager is pinned to the
   upstream revision.
 - Run 1 (control): extract, builds, mesh, and both 30-minute cycles
   succeeded. Output: `work/<cycle>/lfric_atm/lfric_crm_diag_*.nc`, one
   time per 10-minute file.
+- Run 9 (2026-10-01, after the XIOS rebuild, plain clone): both cycles
+  succeeded; build_lfric_atm 11.5 min, each lfric_atm cycle about 1.6 min.
+  Page 05's code runs on it unchanged.
 - Re-running after an edit (run 2, `rotating=.true.`, both cycles succeeded):
   `run-suite.sh u-dz791` again recognises the
   staged checkout, keeps the edit and starts a new run.
