@@ -22,6 +22,17 @@ appendix says to ask the University of Exeter). Moving to a shared prefix is
 lfric-env-isambard #46; when it happens, update both include files and rebuild
 the Python env there with `LFRIC_PREFIX=<new prefix>`.
 
+Since lfric-env-isambard PR #54 (rebuilt in place, 14:23-16:58 UTC on
+2026-10-01) the module no longer sets `PYTHONPATH`, and its own `python3` has
+Iris, cartopy and matplotlib (enough for rose-stem's `plot_*` tasks, not for
+the notebooks). Load the module first, then `micromamba activate`, as the
+appendix says: `python3` and `jupyter` then come from the Python env, which
+sees only its own packages, and `cylc`, `rose` and `psyclone` still come from
+the module (checked in a fresh shell). Before #54 the module's older jinja2,
+yaml and dateutil shadowed the Python env's. A shell or Jupyter server
+started before the rebuild keeps the old `PYTHONPATH` even after `module
+purge`; log in again.
+
 Test area used while verifying: `$SCRATCHDIR/lfric-training`.
 
 ## Needed beyond lfric-env-isambard
