@@ -82,14 +82,15 @@ rebuild, as a fresh trainee (new `HOME` and `SCRATCHDIR`; lfric-env-isambard
 pass and reset with `svn revert`, because the MOSRS cache had expired).
 Practical 1, Practical 2 (u-dn704 run3, then the 72-step rerun: 17 files),
 u-dz791 run12 (control, 200 levels) and run13 (Experiment 2, 100 levels), and
-page 05's code on both all passed. Practical 3 did **not**: see #55 below.
+page 05's code on both all passed. Practical 3 failed until #55 was fixed;
+it passes again (see below).
 
 | Page | Status on Isambard 3 |
 |------|----------------------|
 | Mesh tutorial | Verified: all 11 notebooks run in the Python env; JupyterLab via SSH tunnel |
 | Practical 1, command line | Verified end to end with lfric_apps `main` @ `d2b54a76` (2026-10-01) |
 | Practical 2, standard suite | Verified with **u-dn704** in place of the private example repository (see below) |
-| Practical 3, rose stem | Verified for the `scripts` group, with the lfric-env-isambard site patch (see below); **broken since #54 until #55 is fixed** |
+| Practical 3, rose stem | Verified for the `scripts` group, with the lfric-env-isambard site patch (see below) |
 | Global practicals (u-dz612) | **Cannot run**: coupled GC6 (UM, NEMO, SI3) and Met Office data. Tabs say so. #24 |
 | Regional practicals (u-by395) | **Cannot run**: UM-driven nesting suite needing operational analyses. Tabs say so. #25 |
 | Idealised practicals (u-dz791) | Verified with lfric-env-isambard's `run-suite.sh u-dz791` (see below) |
@@ -199,7 +200,12 @@ page 05's code on both all passed. Practical 3 did **not**: see #55 below.
   ahead of the `stylist` package. Broadcasting
   `[environment]PYTHONPATH=${PYTHONPATH%:}` to the tasks fixes it (run4
   retriggered: 12/12; run5 with the trailing space: the expected failures).
-  Until #55 is fixed, Practical 3 fails for learners.
+  Fixed by lfric-env-isambard PR #56 (rebuilt in place on 2026-10-01): the
+  module's cylc-flow appends `PYTHONPATH` only when it is non-empty, and the
+  module still does not set it. Re-verified as a fresh trainee with
+  `PYTHONPATH` unset: run6 12/12; run7 with the trailing space fails only
+  `style_checker` ("Found trailing white space") and `fortitude_linter`. Runs
+  installed before the rebuild keep the old `.service/etc/job.sh`.
 - `scripts` group: 12 of 12 tasks succeed. A trailing space fails
   `style_checker` ("Found trailing white space") and `fortitude_linter`.
 - The Practical 1 hint code used `.lt.`, which `fortitude_linter` rejects
@@ -225,7 +231,7 @@ page 05's code on both all passed. Practical 3 did **not**: see #55 below.
 | [#40](https://github.com/ickc/lfric-env-isambard/issues/40) | rose-stem site should set `USE_TOKENS` |
 | [#46](https://github.com/ickc/lfric-env-isambard/issues/46) | Shared, non-personal release prefix |
 | [#53](https://github.com/ickc/lfric-env-isambard/issues/53) | u-dz791 stager refuses to relaunch after `LFRIC_LEVS` edit |
-| [#55](https://github.com/ickc/lfric-env-isambard/issues/55) | rose-stem `style_checker` fails since the module dropped `PYTHONPATH` |
+| [#55](https://github.com/ickc/lfric-env-isambard/issues/55) | rose-stem `style_checker` failed after the module dropped `PYTHONPATH` (fixed) |
 
 #18 to #23, #26, #27, #31 and #40 are closed. #24 and #25 are blocked on Met
 Office data (training issues #371, #372).
