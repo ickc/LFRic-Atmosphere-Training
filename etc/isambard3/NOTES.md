@@ -128,6 +128,21 @@ learners' running builds.
 - Run 1 (control): extract, builds, mesh, and both 30-minute cycles
   succeeded. Output: `work/<cycle>/lfric_atm/lfric_crm_diag_*.nc`, one
   time per 10-minute file.
+- Full trainee pass on 2026-10-01 (02:00-02:40 UTC): new `HOME` and
+  `SCRATCHDIR`, real `rosie checkout`s with MOSRS cached, plain clone of
+  lfric-env-isambard at `8fd78f8`, lfric_apps `main` @ `d2b54a76`. All passed:
+  Practical 1 (build, run, hint edit, rebuild, 72 hint lines with step 72
+  "ENJOY THE MODEL TUTORIAL"); Practical 2 u-dn704 run2 (full run, then
+  `timestep_end=72` rerun: step 72, 17 files instead of 29); Practical 3
+  `scripts` 12/12, then a trailing space fails `style_checker` and
+  `fortitude_linter`; u-dz791 run10 (control) and run11 (Experiment 2); page
+  05 code on both (all 11 blocks).
+- Experiment 2 (page 08) edits `LFRIC_LEVS` in `rose-suite.conf`. That line
+  is context in the site patch's `rose-suite.conf` hunk, so the stager's
+  "already staged" reverse check fails and `run-suite.sh` stops with "site
+  patch does not apply" (lfric-env-isambard #53). The page's Isambard 3 note
+  passes it instead: `run-suite.sh u-dz791 -S "LFRIC_LEVS='uniform_l100_75km'"`
+  (run11 has 100 levels). App-config edits (Experiments 1 and 3) are fine.
 - Run 9 (2026-10-01, after the XIOS rebuild, plain clone): both cycles
   succeeded; build_lfric_atm 11.5 min, each lfric_atm cycle about 1.6 min.
   Page 05's code runs on it unchanged.
@@ -182,6 +197,7 @@ learners' running builds.
 | [#27](https://github.com/ickc/lfric-env-isambard/issues/27) | Standard suite for Practical 2 |
 | [#40](https://github.com/ickc/lfric-env-isambard/issues/40) | rose-stem site should set `USE_TOKENS` |
 | [#46](https://github.com/ickc/lfric-env-isambard/issues/46) | Shared, non-personal release prefix |
+| [#53](https://github.com/ickc/lfric-env-isambard/issues/53) | u-dz791 stager refuses to relaunch after `LFRIC_LEVS` edit |
 
 #18 to #23, #26, #27, #31 and #40 are closed. #24 and #25 are blocked on Met
 Office data (training issues #371, #372).
