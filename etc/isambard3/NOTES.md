@@ -76,12 +76,20 @@ on 2026-09-30) failed (missing `xios.mod`, `cylc` and `jinja2` in jobs); they
 are not environment bugs, but in-place updates during a course would break
 learners' running builds.
 
+Re-verified again on 2026-10-01 (20:57-21:45 UTC), after the in-place #54
+rebuild, as a fresh trainee (new `HOME` and `SCRATCHDIR`; lfric-env-isambard
+`4f1c6a7`; lfric_apps `d2b54a76`; rosie checkouts copied from the earlier
+pass and reset with `svn revert`, because the MOSRS cache had expired).
+Practical 1, Practical 2 (u-dn704 run3, then the 72-step rerun: 17 files),
+u-dz791 run12 (control, 200 levels) and run13 (Experiment 2, 100 levels), and
+page 05's code on both all passed. Practical 3 did **not**: see #55 below.
+
 | Page | Status on Isambard 3 |
 |------|----------------------|
 | Mesh tutorial | Verified: all 11 notebooks run in the Python env; JupyterLab via SSH tunnel |
 | Practical 1, command line | Verified end to end with lfric_apps `main` @ `d2b54a76` (2026-10-01) |
 | Practical 2, standard suite | Verified with **u-dn704** in place of the private example repository (see below) |
-| Practical 3, rose stem | Verified for the `scripts` group, with the lfric-env-isambard site patch (see below) |
+| Practical 3, rose stem | Verified for the `scripts` group, with the lfric-env-isambard site patch (see below); **broken since #54 until #55 is fixed** |
 | Global practicals (u-dz612) | **Cannot run**: coupled GC6 (UM, NEMO, SI3) and Met Office data. Tabs say so. #24 |
 | Regional practicals (u-by395) | **Cannot run**: UM-driven nesting suite needing operational analyses. Tabs say so. #25 |
 | Idealised practicals (u-dz791) | Verified with lfric-env-isambard's `run-suite.sh u-dz791` (see below) |
@@ -184,6 +192,14 @@ learners' running builds.
   `HOME` on scratch (no `~/.cylc`): the module supplies the `isambard3`
   platform (#31). An earlier check set an empty `CYLC_CONF_PATH`, which also
   hides the module's site config, so it did not test #31.
+- Since #54, `style_checker` fails in every run with
+  `'stylist' is not a package` (lfric-env-isambard #55). Cylc's job script
+  appends `:${PYTHONPATH:-}`, so an unset `PYTHONPATH` adds an empty entry,
+  which puts the task's work directory, and the app's `stylist.py` config,
+  ahead of the `stylist` package. Broadcasting
+  `[environment]PYTHONPATH=${PYTHONPATH%:}` to the tasks fixes it (run4
+  retriggered: 12/12; run5 with the trailing space: the expected failures).
+  Until #55 is fixed, Practical 3 fails for learners.
 - `scripts` group: 12 of 12 tasks succeed. A trailing space fails
   `style_checker` ("Found trailing white space") and `fortitude_linter`.
 - The Practical 1 hint code used `.lt.`, which `fortitude_linter` rejects
@@ -209,6 +225,7 @@ learners' running builds.
 | [#40](https://github.com/ickc/lfric-env-isambard/issues/40) | rose-stem site should set `USE_TOKENS` |
 | [#46](https://github.com/ickc/lfric-env-isambard/issues/46) | Shared, non-personal release prefix |
 | [#53](https://github.com/ickc/lfric-env-isambard/issues/53) | u-dz791 stager refuses to relaunch after `LFRIC_LEVS` edit |
+| [#55](https://github.com/ickc/lfric-env-isambard/issues/55) | rose-stem `style_checker` fails since the module dropped `PYTHONPATH` |
 
 #18 to #23, #26, #27, #31 and #40 are closed. #24 and #25 are blocked on Met
 Office data (training issues #371, #372).
