@@ -16,9 +16,11 @@ blockers.
 The versions are pinned in `source/include/isambard3-lfric-env.rst` and
 `source/include/isambard3-python-env.rst` only.
 
-Both live under a personal prefix that only members of the course's Isambard 3 project can
-read, so learners must be added to that project (the access note in the
-appendix says to ask the University of Exeter). Moving to a shared prefix is
+Both live under a personal prefix that only members of the course's Isambard 3
+project can read, so learners must be added to that project (the access note
+in the appendix says to ask the University of Exeter). The docs do not name
+the prefix: learners are given it and save it as `LFRIC_TRAINING_PREFIX` in
+`~/.bashrc`, as the appendix says. Moving to a shared prefix is
 lfric-env-isambard #46; when it happens, update both include files and rebuild
 the Python env there with `LFRIC_PREFIX=<new prefix>`.
 
@@ -234,4 +236,7 @@ it passes again (see below).
 | [#55](https://github.com/ickc/lfric-env-isambard/issues/55) | rose-stem `style_checker` failed after the module dropped `PYTHONPATH` (fixed) |
 
 #18 to #23, #26, #27, #31 and #40 are closed. #24 and #25 are blocked on Met
-Office data (training issues #371, #372).
+Office data (training issues #371, #372) and are postponed: the Met Office
+plans a toy model for the global and regional practicals and is looking at
+what could be moved to Isambard 3, but not in time for this course. The tabs
+on those pages say they cannot run on Isambard 3.
