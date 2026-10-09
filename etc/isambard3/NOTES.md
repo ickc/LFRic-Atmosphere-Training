@@ -9,20 +9,28 @@ blockers.
 
 | What | Where | Provided by |
 |------|-------|-------------|
-| LFRic build + workflow tools | `module use "$LFRIC_TRAINING_PREFIX/modulefiles"; module load lfric-env/v2026.09.28/cray` | lfric-env-isambard |
+| LFRic build + workflow tools | `module use "$LFRIC_TRAINING_PREFIX/modulefiles"; module load lfric-env/v2026.10.08/cray` | lfric-env-isambard |
 | Python analysis env | `$LFRIC_TRAINING_PREFIX/conda/envs/lfric-training-v2026.09.28` | `etc/isambard3/build-python-env.sh` (this repo) |
 | micromamba (for activation) | `$LFRIC_TRAINING_PREFIX/conda/bin/micromamba` | same script |
 
 The versions are pinned in `source/include/isambard3-lfric-env.rst` and
 `source/include/isambard3-python-env.rst` only.
 
-Both live under a personal prefix that only members of the course's Isambard 3
+Since lfric-env v2026.10.08 (lfric-env-isambard #46) both live under a
+shared, non-personal prefix that only members of the course's Isambard 3
 project can read, so learners must be added to that project (the access note
 in the appendix says to ask the University of Exeter). The docs do not name
 the prefix: learners are given it and save it as `LFRIC_TRAINING_PREFIX` in
-`~/.bashrc`, as the appendix says. Moving to a shared prefix is
-lfric-env-isambard #46; when it happens, update both include files and rebuild
-the Python env there with `LFRIC_PREFIX=<new prefix>`.
+`~/.bashrc`, as the appendix says. The Python env there was recreated from
+the old one's `conda-explicit.txt` (same 480 packages), so its name keeps the
+v2026.09.28 date. v2026.10.08 is frozen for the course: fixes go into a new
+version, and the pin here is bumped.
+
+The appendix also has learners put `export OMP_NUM_THREADS=4` in `~/.bashrc`.
+Login nodes cap each user at 16 CPUs and 16 GiB (per-user cgroup), and with
+`OMP_NUM_THREADS` unset `lfric_atm` starts 144 threads (22 of 72 steps in 3
+minutes) and NumPy's OpenBLAS starts 128. The suites set `OMP_NUM_THREADS=1`
+for their model tasks, so the exported value does not reach them.
 
 Since lfric-env-isambard PR #54 (rebuilt in place, 14:23-16:58 UTC on
 2026-10-01) the module no longer sets `PYTHONPATH`, and its own `python3` has
@@ -35,7 +43,7 @@ yaml and dateutil shadowed the Python env's. A shell or Jupyter server
 started before the rebuild keeps the old `PYTHONPATH` even after `module
 purge`; log in again.
 
-Test area used while verifying: `$SCRATCHDIR/lfric-training`.
+Test area used while verifying: `$SCRATCH/lfric-training`.
 
 ## Needed beyond lfric-env-isambard
 
@@ -70,6 +78,20 @@ lfric-env v2026.09.28; see the issue table below.
 
 ## Status by page
 
+Re-verified on 2026-10-08 with `lfric-env/v2026.10.08/cray` at the shared
+prefix, as a fresh learner (new `HOME` and `SCRATCH`; lfric-env-isambard
+`7a04a9d`; lfric_apps `8cfce297`; real `rosie checkout`s): Practical 1 on the
+login node (build, run, hint edit: 72 hint lines, step 72 "ENJOY THE MODEL
+TUTORIAL"); Practical 2 u-dn704 run4 (144 steps, 29 files); Practical 3
+`scripts` 12/12; u-dz791 run14 cycle 1. The rest (run14 cycle 2, run15) is
+still queued: from about 17:00 UTC on 2026-10-08 no job of the project
+started for 18+ hours at `Priority=1`, and `sbatch --test-only` projected a
+1-core job to 2026-10-13. Queue waits like this are expected for self-paced
+learners; lfric-env-isambard #59 proposes smaller, non-exclusive model jobs,
+since 24-core jobs started within 30 s while whole-node exclusive ones
+waited 1.5 h in the same window.
+
+
 Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30. Practicals 1 and 2
 and u-dz791 were re-verified on 2026-10-01 after the in-place XIOS rebuild
 (#38) and the rose-meta addition (#51), as a trainee with a fresh `HOME`.
@@ -102,14 +124,15 @@ it passes again (see below).
 - Upstream `lfric_apps` (tested at `aef51e27`) compiles **unpatched** with the
   module; none of lfric-env-isambard's `patches/` were needed.
 - `local_build.py` clones lfric_core and the physics repositories from
-  `git@github.com:` URLs. In a Slurm job there is no ssh-agent, so the docs
-  set `GIT_CONFIG_COUNT/KEY_0/VALUE_0` to rewrite them to HTTPS (all are
+  `git@github.com:` URLs, which need a GitHub SSH key. The docs set
+  `GIT_CONFIG_COUNT/KEY_0/VALUE_0` to rewrite them to HTTPS (all are
   public). This avoids changing the learner's global git config.
-- Compile: `srun --partition=grace --ntasks=1 --cpus-per-task=24
-  --mem-per-cpu=1600M ... -j 24`, about 4 minutes.
-- Run: about 26 s via `srun --ntasks=1 --cpus-per-task=4`. On a login node it
-  was still at timestep 35 of 72 after 5 minutes (OpenMP threads competing
-  with other users), so the docs run it through `srun`.
+- Like the other platforms' tabs, Practical 1 compiles and runs on the login
+  node (2026-10-08, v2026.10.08). A from-scratch `-j 16` build took 247 s,
+  peaking at 7.3 GB for the whole user cgroup; the run takes about 5 s with
+  `OMP_NUM_THREADS=4`. The earlier slow login-node run (timestep 35 of 72
+  after 5 minutes) was OpenMP starting 144 threads, not the login node.
+  Earlier versions of the page used `srun` for both.
 
 ### Practical 2 details
 
@@ -163,8 +186,12 @@ it passes again (see below).
   is context in the site patch's `rose-suite.conf` hunk, so the stager's
   "already staged" reverse check fails and `run-suite.sh` stops with "site
   patch does not apply" (lfric-env-isambard #53). The page's Isambard 3 note
-  passes it instead: `run-suite.sh u-dz791 -S "LFRIC_LEVS='uniform_l100_75km'"`
-  (run11 has 100 levels). App-config edits (Experiments 1 and 3) are fine.
+  passed it instead: `run-suite.sh u-dz791 -S "LFRIC_LEVS='uniform_l100_75km'"`
+  (run11 has 100 levels). Fixed by lfric-env-isambard PR #57 (main `f4f96b9`
+  or later): on 2026-10-08 a fresh learner edited `LFRIC_LEVS` in
+  `rose-suite.conf` and `run-suite.sh u-dz791` relaunched it (run15), so the
+  note was dropped. run15's jobs had not left the queue when this was
+  written. App-config edits (Experiments 1 and 3) are fine.
 - Run 9 (2026-10-01, after the XIOS rebuild, plain clone): both cycles
   succeeded; build_lfric_atm 11.5 min, each lfric_atm cycle about 1.6 min.
   Page 05's code runs on it unchanged.
@@ -231,11 +258,12 @@ it passes again (see below).
 | [#26](https://github.com/ickc/lfric-env-isambard/issues/26) | u-dz791, idealised practicals |
 | [#27](https://github.com/ickc/lfric-env-isambard/issues/27) | Standard suite for Practical 2 |
 | [#40](https://github.com/ickc/lfric-env-isambard/issues/40) | rose-stem site should set `USE_TOKENS` |
-| [#46](https://github.com/ickc/lfric-env-isambard/issues/46) | Shared, non-personal release prefix |
-| [#53](https://github.com/ickc/lfric-env-isambard/issues/53) | u-dz791 stager refuses to relaunch after `LFRIC_LEVS` edit |
+| [#46](https://github.com/ickc/lfric-env-isambard/issues/46) | Shared, non-personal release prefix (done in v2026.10.08) |
+| [#53](https://github.com/ickc/lfric-env-isambard/issues/53) | u-dz791 stager refuses to relaunch after `LFRIC_LEVS` edit (fixed) |
+| [#59](https://github.com/ickc/lfric-env-isambard/issues/59) | Training mode: small shared-node model jobs for u-dz791 and u-dn704 |
 | [#55](https://github.com/ickc/lfric-env-isambard/issues/55) | rose-stem `style_checker` failed after the module dropped `PYTHONPATH` (fixed) |
 
-#18 to #23, #26, #27, #31 and #40 are closed. #24 and #25 are blocked on Met
+#18 to #23, #26, #27, #31, #40, #46, #53 and #55 are closed. #24 and #25 are blocked on Met
 Office data (training issues #371, #372) and are postponed: the Met Office
 plans a toy model for the global and regional practicals and is looking at
 what could be moved to Isambard 3, but not in time for this course. The tabs
