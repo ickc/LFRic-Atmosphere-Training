@@ -78,18 +78,44 @@ lfric-env v2026.09.28; see the issue table below.
 
 ## Status by page
 
+Re-verified on 2026-10-27 after rebasing on upstream `main` (`ae7022a`), with
+the same frozen `lfric-env/v2026.10.08/cray`, as a fresh learner (new `HOME`
+and `SCRATCH`; lfric-env-isambard `7a04a9d`; lfric_apps `main` @ `eaf115e2`;
+real `rosie checkout`s). Everything passed: the 11 mesh notebooks (183 s);
+Practical 1 on the login node (`-j 16` build 294 s, run 10 s, hint edit and
+77 s rebuild: 72 hint lines, step 72 "ENJOY THE MODEL TUTORIAL"); Practical 2
+u-dn704 run5 (144 steps, 29 files; `timestep_end='72'` rerun: step 72, 17
+files); Practical 3 `scripts` 12/12; u-dz791 run16 (control, 200 levels,
+both cycles), run17 (Experiment 2, `LFRIC_LEVS` edited in `rose-suite.conf`,
+relaunched with the same command: 100 levels); page 05's 11 blocks on run16.
+The site patch and the hint patch still apply to `eaf115e2`, and neither
+suite's trunk has moved past its pin. The queue was quiet: every job,
+whole-node ones included, started within about a minute.
+
+The login-node cgroup is shared by everything the user runs on that node
+(`MemoryMax=16G`, `CPUQuota=1600%`, `TasksMax=2000`). The `-j 16` build adds
+about 6.5 GB on top of what is already running. On 2026-10-27 an unrelated
+`rattler-build` of XIOS with `--job 144` (`CPU_COUNT` defaults to `nproc`,
+144) hit the limit: the OOM killer took 97 `cc1plus` processes and every
+running Claude Code process at about 15:13 UTC. Anything that compiles on a
+login node should cap its parallelism at 16 or less.
+
 Re-verified on 2026-10-08 with `lfric-env/v2026.10.08/cray` at the shared
 prefix, as a fresh learner (new `HOME` and `SCRATCH`; lfric-env-isambard
 `7a04a9d`; lfric_apps `8cfce297`; real `rosie checkout`s): Practical 1 on the
 login node (build, run, hint edit: 72 hint lines, step 72 "ENJOY THE MODEL
 TUTORIAL"); Practical 2 u-dn704 run4 (144 steps, 29 files); Practical 3
-`scripts` 12/12; u-dz791 run14 cycle 1. The rest (run14 cycle 2, run15) is
-still queued: from about 17:00 UTC on 2026-10-08 no job of the project
-started for 18+ hours at `Priority=1`, and `sbatch --test-only` projected a
-1-core job to 2026-10-13. Queue waits like this are expected for self-paced
-learners; lfric-env-isambard #59 proposes smaller, non-exclusive model jobs,
-since 24-core jobs started within 30 s while whole-node exclusive ones
-waited 1.5 h in the same window.
+`scripts` 12/12; u-dz791 run14 cycle 1. The rest ran on 2026-10-09/10 after
+a long stall (from about 17:00 UTC on 2026-10-08 no job of the project
+started for 18+ hours at `Priority=1`): run14 cycle 2 and run15 (100 levels)
+succeeded. lfric-env-isambard #59 proposes smaller, non-exclusive model
+jobs, since 24-core jobs started within 30 s while whole-node exclusive ones
+waited 1.5 h on 2026-10-08. Prototypes: u-dn704 on 25 ranks
+(`--nodes=1 --ntasks=25 --mem=40G`) passed. u-dz791's 128x128 planar mesh
+with `panel_decomposition='auto'` needs a rank count that tiles it: 24 and
+19 fail with "Could not automatically partition domain"; 16 passed
+(2026-10-27, `dz791-small/run3`, both cycles, about 4.8 min per cycle against
+1 min on a whole node).
 
 
 Verified with `lfric-env/v2026.09.28/cray` on 2026-09-30. Practicals 1 and 2
