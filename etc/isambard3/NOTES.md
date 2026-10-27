@@ -290,7 +290,14 @@ it passes again (see below).
 | [#55](https://github.com/ickc/lfric-env-isambard/issues/55) | rose-stem `style_checker` failed after the module dropped `PYTHONPATH` (fixed) |
 
 #18 to #23, #26, #27, #31, #40, #46, #53 and #55 are closed. #24 and #25 are blocked on Met
-Office data (training issues #371, #372) and are postponed: the Met Office
-plans a toy model for the global and regional practicals and is looking at
-what could be moved to Isambard 3, but not in time for this course. The tabs
-on those pages say they cannot run on Isambard 3.
+Office data (training issues #371, #372). The tabs on those pages say they
+cannot run on Isambard 3.
+
+Which workflows the course uses (2026-10, after discussion between the
+University of Exeter and Met Office RSEs): in the long run, a smaller
+workflow that anyone can download would suit the course well. In the
+interim, the path of least resistance is the Met Office workflows the course
+already uses (u-dn704, u-dz791, and u-dz612 and u-by395 for the global and
+regional practicals), which are maintained and known to work. So work on
+Isambard 3 should adapt how these run there (lfric-env-isambard #59; #24 and
+#25 once their input data can be moved), not replace them.
