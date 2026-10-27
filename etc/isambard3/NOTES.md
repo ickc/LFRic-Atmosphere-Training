@@ -181,7 +181,11 @@ it passes again (see below).
   u-dn704` and `svn update -r 361458` run without prompting. `rosie lookup`
   (the web service) still asks for a username; the practicals do not use it.
 - The pinned revision (361458) must track lfric-env-isambard's stager
-  (`patches/suites/42-roses-u-u-dn704-patch.sh`), which refuses any other.
+  (`patches/suites/42-roses-u-u-dn704-patch.sh`). Since lfric-env-isambard
+  #60 (closes #41) the stager accepts any checkout whose suite content
+  matches the pin, so a plain `rosie checkout` at HEAD also works while
+  upstream leaves the suite alone. The docs keep `svn update -r`, which still
+  works once upstream moves; learners pick up #60 with `git pull`.
 
 ### Idealised practicals (u-dz791)
 
